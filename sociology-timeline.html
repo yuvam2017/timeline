@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sociological Record — A Timeline of Thinkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F0EBE0;
+    --paper-dark: #E4DCC8;
+    --ink: #1A1A1A;
+    --ink-soft: #4A453E;
+    --stamp-red: #8B3A3A;
+    --ledger-green: #3D5A4A;
+    --brass: #C4A35A;
+    --rule: rgba(26,26,26,0.18);
+    --card-shadow: 0 1px 0 rgba(26,26,26,0.05), 0 8px 24px rgba(26,26,26,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+
+  body{
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(196,163,90,0.07), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(61,90,74,0.05), transparent 50%);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* subtle paper grain via noise-like layered gradient */
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    background-image: repeating-linear-gradient(0deg, rgba(26,26,26,0.012) 0px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ============ HEADER ============ */
+  header{
+    position: relative;
+    padding: 5rem 6vw 4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .eyebrow::before{
+    content:"";
+    width: 28px; height: 1px;
+    background: var(--stamp-red);
+  }
+  h1{
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.02;
+    margin: 0 0 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    max-width: 16ch;
+  }
+  h1 em{
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ledger-green);
+  }
+  .subhead{
+    font-size: 1.08rem;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .header-meta{
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .header-meta div span{
+    display:block;
+    color: var(--ink);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 0.15rem;
+  }
+
+  /* ============ ERA NAV ============ */
+  .era-nav{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .era-nav::-webkit-scrollbar{ display:none; }
+  .era-nav button{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--rule);
+    padding: 0.95rem 1.3rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .era-nav button:hover{ background: var(--paper-dark); color: var(--ink); }
+  .era-nav button.active{ color: var(--stamp-red); background: var(--paper-dark); }
+
+  /* ============ SPINE / TIMELINE ============ */
+  .spine-wrap{
+    position: relative;
+    padding: 0 6vw 6rem;
+  }
+  .spine-line{
+    position: absolute;
+    left: calc(6vw + 1px);
+    top: 0;
+    bottom: 6rem;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--brass), var(--rule) 6%, var(--rule) 94%, transparent);
+  }
+
+  .era-block{
+    position: relative;
+    padding-top: 4.5rem;
+  }
+  .era-block:first-child{ padding-top: 3rem; }
+
+  .era-label{
+    position: relative;
+    margin-left: 2.4rem;
+    margin-bottom: 2.2rem;
+  }
+  .era-tag{
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-family:'JetBrains Mono', monospace;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .era-tag .yrs{ color: var(--brass); }
+  .era-title{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0.7rem 0 0.3rem;
+  }
+  .era-desc{
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .node-dot{
+    position: absolute;
+    left: -2.46rem;
+    top: 0.6rem;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--brass);
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+
+  /* cards row */
+  .cards-row{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem;
+    margin-left: 2.4rem;
+  }
+
+  .card{
+    position: relative;
+    background: #FAF7EF;
+    border: 1px solid var(--rule);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem 1.5rem 1.7rem;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .card.in-view{ opacity: 1; transform: translateY(0); }
+
+  .card::before{
+    content:"";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: var(--card-accent, var(--ledger-green));
+  }
+
+  .card-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.9rem;
+  }
+  .card-years{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    background: var(--paper-dark);
+    padding: 0.2rem 0.5rem;
+  }
+  .card-stamp{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--ledger-green));
+    border: 1px solid var(--card-accent, var(--ledger-green));
+    padding: 0.15rem 0.4rem;
+    transform: rotate(-2deg);
+  }
+  .card h3{
+    font-size: 1.32rem;
+    font-weight: 600;
+    margin: 0 0 0.15rem;
+  }
+  .card .nationality{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0 0 1rem;
+  }
+  .card .contribution-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--ledger-green));
+    margin-bottom: 0.35rem;
+    display:block;
+  }
+  .card .contribution{
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+  .card .key-term{
+    display: inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.25rem 0.55rem;
+    margin: 0.15rem 0.3rem 0 0;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top: 1px solid var(--rule);
+    padding: 3rem 6vw 4rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px){
+    header{ padding: 3.5rem 5vw 2.5rem; }
+    .spine-wrap{ padding: 0 5vw 4rem; }
+    .spine-line{ left: calc(5vw + 1px); }
+    .cards-row{ grid-template-columns: 1fr; margin-left: 1.8rem; }
+    .era-label{ margin-left: 1.8rem; }
+    .node-dot{ left: -1.86rem; }
+    .header-meta{ gap: 1.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card{ transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">A study reference · est. 2026</div>
+  <h1>The Sociological <em>Record</em></h1>
+  <p class="subhead">Five eras, fourteen thinkers, and the core idea each one left behind — from the founding of the discipline to its contemporary debates.</p>
+  <div class="header-meta">
+    <div>Span<span>1830 – Present</span></div>
+    <div>Eras<span>05</span></div>
+    <div>Thinkers<span>14</span></div>
+  </div>
+</header>
+
+<nav class="era-nav" id="eraNav">
+  <button data-target="era-1" class="active">01 · Founding</button>
+  <button data-target="era-2">02 · Classical</button>
+  <button data-target="era-3">03 · Mid-Century</button>
+  <button data-target="era-4">04 · Critical Turn</button>
+  <button data-target="era-5">05 · Contemporary</button>
+</nav>
+
+<div class="spine-wrap">
+  <div class="spine-line"></div>
+
+  <!-- ERA 1 -->
+  <section class="era-block" id="era-1">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 01 <span class="yrs">1830 – 1890s</span></div>
+      <h2 class="era-title">The Founding Era</h2>
+      <p class="era-desc">Sociology breaks from philosophy and theology, claiming society itself as an object that can be studied with the tools of science.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1798–1857</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Auguste Comte</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Coined the term "sociology" and proposed <strong>positivism</strong> — the idea that society follows observable laws that can be studied scientifically, just like nature.</p>
+        <span class="key-term">Positivism</span>
+        <span class="key-term">Social Statics/Dynamics</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1818–1883</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Karl Marx</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Argued history is driven by <strong>class conflict</strong> rooted in who controls the means of production — the material basis of all social and political life.</p>
+        <span class="key-term">Historical Materialism</span>
+        <span class="key-term">Class Conflict</span>
+        <span class="key-term">Alienation</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1820–1903</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Herbert Spencer</h3>
+        <p class="nationality">British</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Applied evolutionary theory to society, describing it as an organism that grows more complex and differentiated over time — "survival of the fittest" applied socially.</p>
+        <span class="key-term">Social Evolutionism</span>
+        <span class="key-term">Organic Analogy</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 2 -->
+  <section class="era-block" id="era-2">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 02 <span class="yrs">1890s – 1920s</span></div>
+      <h2 class="era-title">Classical Consolidation</h2>
+      <p class="era-desc">The discipline gains its core methods and concepts — the "big three" whose frameworks still anchor most intro courses.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">1858–1917</span>
+          <span class="card-stamp">Classical</span>
+        </div>
+        <h3>Émile Durkheim</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Established sociology as a rigorous discipline studying "social facts." Showed even private acts like suicide follow social patterns shaped by <strong>social integration</strong>.</p>
+        <span class="key-term">Social Facts</span>
+        <span class="key-term">Anomie</span>
+        <span class="key-term">Functionalism</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">1864–1920</span>
+          <span class="card-stamp">Classical</span>
+        </div>
+        <h3>Max Weber</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Studied how culture and ideas (not just economics) shape society, and how modern life becomes dominated by <strong>rationalization</strong> and bureaucracy.</p>
+        <span class="key-term">Verstehen</span>
+        <span class="key-term">Rationalization</span>
+        <span class="key-term">Ideal Types</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">1858–1918</span>
+          <span class="card-stamp">Classical</span>
+        </div>
+        <h3>Georg Simmel</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Pioneered <strong>micro-sociology</strong>, examining how forms of interaction (exchange, conflict, the stranger) shape everyday urban social life.</p>
+        <span class="key-term">Social Forms</span>
+        <span class="key-term">The Metropolis</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 3 -->
+  <section class="era-block" id="era-3">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 03 <span class="yrs">1920s – 1960s</span></div>
+      <h2 class="era-title">Mid-Century Structuralism</h2>
+      <p class="era-desc">American sociology rises, building grand systems to explain how social order is maintained and how meaning is built through interaction.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#C4A35A">
+        <div class="card-top">
+          <span class="card-years mono">1863–1931</span>
+          <span class="card-stamp">Mid-Century</span>
+        </div>
+        <h3>George Herbert Mead</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Founded <strong>symbolic interactionism</strong> — the self is formed through social interaction and the internalized perspective of others (the "generalized other").</p>
+        <span class="key-term">Symbolic Interactionism</span>
+        <span class="key-term">The "I" and "Me"</span>
+      </div>
+
+      <div class="card" style="--card-accent:#C4A35A">
+        <div class="card-top">
+          <span class="card-years mono">1902–1979</span>
+          <span class="card-stamp">Mid-Century</span>
+        </div>
+        <h3>Talcott Parsons</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Built <strong>structural functionalism</strong> into a grand theory: society as a system of interdependent parts, each serving a function to maintain stability.</p>
+        <span class="key-term">AGIL Schema</span>
+        <span class="key-term">Social System</span>
+      </div>
+
+      <div class="card" style="--card-accent:#C4A35A">
+        <div class="card-top">
+          <span class="card-years mono">1910–2003</span>
+          <span class="card-stamp">Mid-Century</span>
+        </div>
+        <h3>Robert K. Merton</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Refined functionalism with concepts like <strong>manifest vs. latent functions</strong> and strain theory, explaining deviance as a response to blocked goals.</p>
+        <span class="key-term">Strain Theory</span>
+        <span class="key-term">Latent Function</span>
+        <span class="key-term">Self-Fulfilling Prophecy</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 4 -->
+  <section class="era-block" id="era-4">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 04 <span class="yrs">1960s – 1980s</span></div>
+      <h2 class="era-title">The Critical &amp; Conflict Turn</h2>
+      <p class="era-desc">A reaction against grand, stability-focused theory — attention shifts to power, performance, and the hidden structures behind everyday life.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1922–1982</span>
+          <span class="card-stamp">Critical Turn</span>
+        </div>
+        <h3>Erving Goffman</h3>
+        <p class="nationality">Canadian-American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Developed <strong>dramaturgy</strong> — everyday life as a performance, with people managing "front stage" and "back stage" impressions.</p>
+        <span class="key-term">Dramaturgy</span>
+        <span class="key-term">Impression Management</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1926–1984</span>
+          <span class="card-stamp">Critical Turn</span>
+        </div>
+        <h3>Michel Foucault</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Showed how <strong>power operates through knowledge and institutions</strong> (prisons, hospitals, schools), disciplining bodies without needing overt force.</p>
+        <span class="key-term">Power/Knowledge</span>
+        <span class="key-term">Discipline</span>
+        <span class="key-term">Biopower</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1930–2002</span>
+          <span class="card-stamp">Critical Turn</span>
+        </div>
+        <h3>Pierre Bourdieu</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Explained how inequality reproduces itself through <strong>habitus</strong> and forms of capital (cultural, social) beyond just money.</p>
+        <span class="key-term">Habitus</span>
+        <span class="key-term">Cultural Capital</span>
+        <span class="key-term">Field</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 5 -->
+  <section class="era-block" id="era-5">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 05 <span class="yrs">1980s – Present</span></div>
+      <h2 class="era-title">Contemporary Sociology</h2>
+      <p class="era-desc">Theory grapples with globalization, identity, and the blurred line between individual agency and social structure.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">b. 1929</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Jürgen Habermas</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Theorized the <strong>public sphere</strong> and "communicative action" — rational dialogue as the basis for democratic legitimacy, threatened by market and state power.</p>
+        <span class="key-term">Public Sphere</span>
+        <span class="key-term">Communicative Action</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">b. 1938</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Anthony Giddens</h3>
+        <p class="nationality">British</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Developed <strong>structuration theory</strong> — structure and individual agency are not opposites but constantly produce each other through routine practice.</p>
+        <span class="key-term">Structuration</span>
+        <span class="key-term">Reflexive Modernity</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">b. 1956</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Judith Butler</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Argued gender is <strong>performative</strong> — not an innate identity but something continually produced through repeated social acts and norms.</p>
+        <span class="key-term">Performativity</span>
+        <span class="key-term">Gender Trouble</span>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <span>The Sociological Record · A study timeline</span>
+  <span>14 thinkers · 5 eras · ~190 years</span>
+</footer>
+
+<script>
+  // Scroll-reveal for cards
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(c => observer.observe(c));
+
+  // Era nav: smooth scroll + active state
+  const navButtons = document.querySelectorAll('.era-nav button');
+  const eraSections = document.querySelectorAll('.era-block');
+
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navButtons.forEach(b => b.classList.remove('active'));
+        const activeBtn = document.querySelector(`.era-nav button[data-target="${entry.target.id}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+
+  eraSections.forEach(s => navObserver.observe(s));
+</script>
+
+</body>
+</html>

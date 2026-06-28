@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sociological Record — A Timeline of Thinkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F0EBE0;
+    --paper-dark: #E4DCC8;
+    --ink: #1A1A1A;
+    --ink-soft: #4A453E;
+    --stamp-red: #8B3A3A;
+    --ledger-green: #3D5A4A;
+    --brass: #C4A35A;
+    --rule: rgba(26,26,26,0.18);
+    --card-shadow: 0 1px 0 rgba(26,26,26,0.05), 0 8px 24px rgba(26,26,26,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+
+  body{
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(196,163,90,0.07), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(61,90,74,0.05), transparent 50%);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* subtle paper grain via noise-like layered gradient */
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    background-image: repeating-linear-gradient(0deg, rgba(26,26,26,0.012) 0px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ============ HEADER ============ */
+  header{
+    position: relative;
+    padding: 5rem 6vw 4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .eyebrow::before{
+    content:"";
+    width: 28px; height: 1px;
+    background: var(--stamp-red);
+  }
+  h1{
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.02;
+    margin: 0 0 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    max-width: 16ch;
+  }
+  h1 em{
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ledger-green);
+  }
+  .subhead{
+    font-size: 1.08rem;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .header-meta{
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .header-meta div span{
+    display:block;
+    color: var(--ink);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 0.15rem;
+  }
+
+  /* ============ ERA NAV ============ */
+  .era-nav{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .era-nav::-webkit-scrollbar{ display:none; }
+  .era-nav button{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--rule);
+    padding: 0.95rem 1.3rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .era-nav button:hover{ background: var(--paper-dark); color: var(--ink); }
+  .era-nav button.active{ color: var(--stamp-red); background: var(--paper-dark); }
+
+  /* ============ WORLD TABS ============ */
+  .world-tabs{
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: var(--ink);
+    display: flex;
+    border-bottom: 1px solid var(--rule);
+  }
+  .world-tabs button{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    padding: 1.05rem 1.6rem;
+    color: rgba(240,235,224,0.55);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    border-bottom: 3px solid transparent;
+  }
+  .world-tabs button:hover{ color: var(--paper); }
+  .world-tabs button.active{
+    color: var(--brass);
+    border-bottom-color: var(--brass);
+    background: rgba(196,163,90,0.08);
+  }
+  .world-section{ display: none; }
+  .world-section.active{ display: block; }
+
+  /* ============ INDIA THEME ACCENTS ============ */
+  .india-flag-bar{
+    height: 4px;
+    width: 100%;
+    background: linear-gradient(to right, #FF9933 0%, #FF9933 33%, #FFFFFF 33%, #FFFFFF 66%, #138808 66%, #138808 100%);
+  }
+
+  /* ============ SPINE / TIMELINE ============ */
+  .spine-wrap{
+    position: relative;
+    padding: 0 6vw 6rem;
+  }
+  .spine-line{
+    position: absolute;
+    left: calc(6vw + 1px);
+    top: 0;
+    bottom: 6rem;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--brass), var(--rule) 6%, var(--rule) 94%, transparent);
+  }
+
+  .era-block{
+    position: relative;
+    padding-top: 4.5rem;
+  }
+  .era-block:first-child{ padding-top: 3rem; }
+
+  .era-label{
+    position: relative;
+    margin-left: 2.4rem;
+    margin-bottom: 2.2rem;
+  }
+  .era-tag{
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-family:'JetBrains Mono', monospace;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .era-tag .yrs{ color: var(--brass); }
+  .era-title{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0.7rem 0 0.3rem;
+  }
+  .era-desc{
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .node-dot{
+    position: absolute;
+    left: -2.46rem;
+    top: 0.6rem;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--brass);
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+
+  /* cards row */
+  .cards-row{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem;
+    margin-left: 2.4rem;
+  }
+
+  .card{
+    position: relative;
+    background: #FAF7EF;
+    border: 1px solid var(--rule);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem 1.5rem 1.7rem;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .card.in-view{ opacity: 1; transform: translateY(0); }
+
+  .card::before{
+    content:"";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: var(--card-accent, var(--ledger-green));
+  }
+
+  .card-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.9rem;
+  }
+  .card-years{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    background: var(--paper-dark);
+    padding: 0.2rem 0.5rem;
+  }
+  .card-stamp{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--ledger-green));
+    border: 1px solid var(--card-accent, var(--ledger-green));
+    padding: 0.15rem 0.4rem;
+    transform: rotate(-2deg);
+  }
+  .card h3{
+    font-size: 1.32rem;
+    font-weight: 600;
+    margin: 0 0 0.15rem;
+  }
+  .card .nationality{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0 0 1rem;
+  }
+  .card .contribution-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--ledger-green));
+    margin-bottom: 0.35rem;
+    display:block;
+  }
+  .card .contribution{
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+  .card .key-term{
+    display: inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.25rem 0.55rem;
+    margin: 0.15rem 0.3rem 0 0;
+  }
+  .card .key-term.syllabus-tag{
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top: 1px solid var(--rule);
+    padding: 3rem 6vw 4rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px){
+    header{ padding: 3.5rem 5vw 2.5rem; }
+    .spine-wrap{ padding: 0 5vw 4rem; }
+    .spine-line{ left: calc(5vw + 1px); }
+    .cards-row{ grid-template-columns: 1fr; margin-left: 1.8rem; }
+    .era-label{ margin-left: 1.8rem; }
+    .node-dot{ left: -1.86rem; }
+    .header-meta{ gap: 1.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card{ transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">A study reference · est. 2026</div>
+  <h1>The Sociological <em>Record</em></h1>
+  <p class="subhead">Western foundations and the distinct tradition of Indian sociology — thinkers, eras, and the core idea each one left behind. Built for UPSC Sociology Optional &amp; IGNOU MA Sociology revision.</p>
+  <div class="header-meta" id="headerMeta">
+    <div>Span<span>1830 – Present</span></div>
+    <div>Eras<span>05</span></div>
+    <div>Thinkers<span>14</span></div>
+  </div>
+</header>
+
+<nav class="world-tabs" id="worldTabs">
+  <button data-world="world-global" class="active">🌍 Western / Global</button>
+  <button data-world="world-india">🇮🇳 Indian Sociology</button>
+</nav>
+
+<div class="india-flag-bar" id="indiaFlagBar" style="display:none;"></div>
+
+<div class="world-section active" id="world-global">
+
+<nav class="era-nav" id="eraNav">
+  <button data-target="era-1" class="active">01 · Founding</button>
+  <button data-target="era-2">02 · Classical</button>
+  <button data-target="era-3">03 · Mid-Century</button>
+  <button data-target="era-4">04 · Critical Turn</button>
+  <button data-target="era-5">05 · Contemporary</button>
+</nav>
+
+<div class="spine-wrap">
+  <div class="spine-line"></div>
+
+  <!-- ERA 1 -->
+  <section class="era-block" id="era-1">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 01 <span class="yrs">1830 – 1890s</span></div>
+      <h2 class="era-title">The Founding Era</h2>
+      <p class="era-desc">Sociology breaks from philosophy and theology, claiming society itself as an object that can be studied with the tools of science.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1798–1857</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Auguste Comte</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Coined the term "sociology" and proposed <strong>positivism</strong> — the idea that society follows observable laws that can be studied scientifically, just like nature.</p>
+        <span class="key-term">Positivism</span>
+        <span class="key-term">Social Statics/Dynamics</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Emergence of Sociology</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1818–1883</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Karl Marx</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Argued history is driven by <strong>class conflict</strong> rooted in who controls the means of production — the material basis of all social and political life.</p>
+        <span class="key-term">Historical Materialism</span>
+        <span class="key-term">Class Conflict</span>
+        <span class="key-term">Alienation</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Unit 4(a)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1820–1903</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Herbert Spencer</h3>
+        <p class="nationality">British</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Applied evolutionary theory to society, describing it as an organism that grows more complex and differentiated over time — "survival of the fittest" applied socially.</p>
+        <span class="key-term">Social Evolutionism</span>
+        <span class="key-term">Organic Analogy</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Emergence of Sociology</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 2 -->
+  <section class="era-block" id="era-2">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 02 <span class="yrs">1890s – 1920s</span></div>
+      <h2 class="era-title">Classical Consolidation</h2>
+      <p class="era-desc">The discipline gains its core methods and concepts — the "big three" whose frameworks still anchor most intro courses.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">1858–1917</span>
+          <span class="card-stamp">Classical</span>
+        </div>
+        <h3>Émile Durkheim</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Established sociology as a rigorous discipline studying "social facts." Showed even private acts like suicide follow social patterns shaped by <strong>social integration</strong>.</p>
+        <span class="key-term">Social Facts</span>
+        <span class="key-term">Anomie</span>
+        <span class="key-term">Functionalism</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Unit 4(b)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">1864–1920</span>
+          <span class="card-stamp">Classical</span>
+        </div>
+        <h3>Max Weber</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Studied how culture and ideas (not just economics) shape society, and how modern life becomes dominated by <strong>rationalization</strong> and bureaucracy.</p>
+        <span class="key-term">Verstehen</span>
+        <span class="key-term">Rationalization</span>
+        <span class="key-term">Ideal Types</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Unit 4(c)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">1858–1918</span>
+          <span class="card-stamp">Classical</span>
+        </div>
+        <h3>Georg Simmel</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Pioneered <strong>micro-sociology</strong>, examining how forms of interaction (exchange, conflict, the stranger) shape everyday urban social life.</p>
+        <span class="key-term">Social Forms</span>
+        <span class="key-term">The Metropolis</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 3 -->
+  <section class="era-block" id="era-3">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 03 <span class="yrs">1920s – 1960s</span></div>
+      <h2 class="era-title">Mid-Century Structuralism</h2>
+      <p class="era-desc">American sociology rises, building grand systems to explain how social order is maintained and how meaning is built through interaction.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#C4A35A">
+        <div class="card-top">
+          <span class="card-years mono">1863–1931</span>
+          <span class="card-stamp">Mid-Century</span>
+        </div>
+        <h3>George Herbert Mead</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Founded <strong>symbolic interactionism</strong> — the self is formed through social interaction and the internalized perspective of others (the "generalized other").</p>
+        <span class="key-term">Symbolic Interactionism</span>
+        <span class="key-term">The "I" and "Me"</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Unit 4(f)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#C4A35A">
+        <div class="card-top">
+          <span class="card-years mono">1902–1979</span>
+          <span class="card-stamp">Mid-Century</span>
+        </div>
+        <h3>Talcott Parsons</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Built <strong>structural functionalism</strong> into a grand theory: society as a system of interdependent parts, each serving a function to maintain stability.</p>
+        <span class="key-term">AGIL Schema</span>
+        <span class="key-term">Social System</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Unit 4(d)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#C4A35A">
+        <div class="card-top">
+          <span class="card-years mono">1910–2003</span>
+          <span class="card-stamp">Mid-Century</span>
+        </div>
+        <h3>Robert K. Merton</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Refined functionalism with concepts like <strong>manifest vs. latent functions</strong> and strain theory, explaining deviance as a response to blocked goals.</p>
+        <span class="key-term">Strain Theory</span>
+        <span class="key-term">Latent Function</span>
+        <span class="key-term">Self-Fulfilling Prophecy</span>
+        <span class="key-term syllabus-tag">UPSC: Paper I, Unit 4(e)</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 4 -->
+  <section class="era-block" id="era-4">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 04 <span class="yrs">1960s – 1980s</span></div>
+      <h2 class="era-title">The Critical &amp; Conflict Turn</h2>
+      <p class="era-desc">A reaction against grand, stability-focused theory — attention shifts to power, performance, and the hidden structures behind everyday life.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1922–1982</span>
+          <span class="card-stamp">Critical Turn</span>
+        </div>
+        <h3>Erving Goffman</h3>
+        <p class="nationality">Canadian-American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Developed <strong>dramaturgy</strong> — everyday life as a performance, with people managing "front stage" and "back stage" impressions.</p>
+        <span class="key-term">Dramaturgy</span>
+        <span class="key-term">Impression Management</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1926–1984</span>
+          <span class="card-stamp">Critical Turn</span>
+        </div>
+        <h3>Michel Foucault</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Showed how <strong>power operates through knowledge and institutions</strong> (prisons, hospitals, schools), disciplining bodies without needing overt force.</p>
+        <span class="key-term">Power/Knowledge</span>
+        <span class="key-term">Discipline</span>
+        <span class="key-term">Biopower</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+      <div class="card" style="--card-accent:#8B3A3A">
+        <div class="card-top">
+          <span class="card-years mono">1930–2002</span>
+          <span class="card-stamp">Critical Turn</span>
+        </div>
+        <h3>Pierre Bourdieu</h3>
+        <p class="nationality">French</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Explained how inequality reproduces itself through <strong>habitus</strong> and forms of capital (cultural, social) beyond just money.</p>
+        <span class="key-term">Habitus</span>
+        <span class="key-term">Cultural Capital</span>
+        <span class="key-term">Field</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ERA 5 -->
+  <section class="era-block" id="era-5">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 05 <span class="yrs">1980s – Present</span></div>
+      <h2 class="era-title">Contemporary Sociology</h2>
+      <p class="era-desc">Theory grapples with globalization, identity, and the blurred line between individual agency and social structure.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">b. 1929</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Jürgen Habermas</h3>
+        <p class="nationality">German</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Theorized the <strong>public sphere</strong> and "communicative action" — rational dialogue as the basis for democratic legitimacy, threatened by market and state power.</p>
+        <span class="key-term">Public Sphere</span>
+        <span class="key-term">Communicative Action</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">b. 1938</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Anthony Giddens</h3>
+        <p class="nationality">British</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Developed <strong>structuration theory</strong> — structure and individual agency are not opposites but constantly produce each other through routine practice.</p>
+        <span class="key-term">Structuration</span>
+        <span class="key-term">Reflexive Modernity</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+      <div class="card" style="--card-accent:#3D5A4A">
+        <div class="card-top">
+          <span class="card-years mono">b. 1956</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Judith Butler</h3>
+        <p class="nationality">American</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Argued gender is <strong>performative</strong> — not an innate identity but something continually produced through repeated social acts and norms.</p>
+        <span class="key-term">Performativity</span>
+        <span class="key-term">Gender Trouble</span>
+        <span class="key-term syllabus-tag">IGNOU: MA Sociology core reading</span>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+</div><!-- /world-global -->
+
+<div class="world-section" id="world-india">
+
+<div class="india-flag-bar"></div>
+
+<nav class="era-nav" id="eraNavIndia">
+  <button data-target="india-era-1" class="active">01 · Colonial Foundations</button>
+  <button data-target="india-era-2">02 · Post-Independence</button>
+  <button data-target="india-era-3">03 · Contemporary India</button>
+</nav>
+
+<div class="spine-wrap">
+  <div class="spine-line"></div>
+
+  <!-- INDIA ERA 1 -->
+  <section class="era-block" id="india-era-1">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 01 <span class="yrs">1920s – 1950s</span></div>
+      <h2 class="era-title">Colonial &amp; Early Foundations</h2>
+      <p class="era-desc">Indian sociology emerges from colonial-era ethnography and Indology, establishing the discipline's first institutional base at Bombay and Pune.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#FF9933">
+        <div class="card-top">
+          <span class="card-years mono">1893–1983</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>G. S. Ghurye</h3>
+        <p class="nationality">Indian · "Father of Indian Sociology"</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Founded the Indology approach — studied Indian society through Sanskritic texts and classical literature, treating caste as indigenous to Indian civilization rather than purely colonial. Established the Bombay school and trained generations of Indian sociologists.</p>
+        <span class="key-term">Indology</span>
+        <span class="key-term">Caste &amp; Race</span>
+        <span class="key-term">UPSC: Paper I, Unit 1(a)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#FF9933">
+        <div class="card-top">
+          <span class="card-years mono">1905–1970</span>
+          <span class="card-stamp">Founder</span>
+        </div>
+        <h3>Irawati Karve</h3>
+        <p class="nationality">Indian</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Pioneered the comparative study of Indian kinship systems, distinguishing the North Indian and South Indian patterns of marriage and descent. One of India's first trained women anthropologists.</p>
+        <span class="key-term">Kinship Organisation</span>
+        <span class="key-term">North–South Kinship Divide</span>
+        <span class="key-term">UPSC: Paper II, Kinship</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INDIA ERA 2 -->
+  <section class="era-block" id="india-era-2">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 02 <span class="yrs">1950s – 1980s</span></div>
+      <h2 class="era-title">Post-Independence Consolidation</h2>
+      <p class="era-desc">Field-based empirical sociology takes hold; village studies, caste mobility, and Marxist critique become the discipline's central debates after Independence.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#138808">
+        <div class="card-top">
+          <span class="card-years mono">1916–1999</span>
+          <span class="card-stamp">Post-Independence</span>
+        </div>
+        <h3>M. N. Srinivas</h3>
+        <p class="nationality">Indian</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Shifted Indian sociology from "book view" to "field view" through village studies. Coined <strong>Sanskritization</strong> (lower castes adopting upper-caste customs to gain status) and the concept of the <strong>Dominant Caste</strong>.</p>
+        <span class="key-term">Sanskritization</span>
+        <span class="key-term">Dominant Caste</span>
+        <span class="key-term">UPSC: Paper I, Unit 1(b)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#138808">
+        <div class="card-top">
+          <span class="card-years mono">1915–1994</span>
+          <span class="card-stamp">Post-Independence</span>
+        </div>
+        <h3>A. R. Desai</h3>
+        <p class="nationality">Indian</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Applied <strong>Marxist sociology</strong> to India — analyzed the social background of Indian nationalism through class and property relations, critiquing both colonial capitalism and post-colonial bourgeois democracy.</p>
+        <span class="key-term">Marxist Sociology</span>
+        <span class="key-term">Social Background of Indian Nationalism</span>
+        <span class="key-term">UPSC: Paper I, Unit 1(c)</span>
+      </div>
+
+      <div class="card" style="--card-accent:#138808">
+        <div class="card-top">
+          <span class="card-years mono">1911–1998</span>
+          <span class="card-stamp">Post-Independence</span>
+        </div>
+        <h3>Louis Dumont</h3>
+        <p class="nationality">French (Indologist)</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Proposed the <strong>purity–pollution</strong> framework for caste in <em>Homo Hierarchicus</em>, arguing caste is a unique system of hierarchy rooted in ritual status, not merely economic class.</p>
+        <span class="key-term">Homo Hierarchicus</span>
+        <span class="key-term">Purity &amp; Pollution</span>
+        <span class="key-term">UPSC: Paper II, Caste</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INDIA ERA 3 -->
+  <section class="era-block" id="india-era-3">
+    <div class="era-label">
+      <div class="node-dot"></div>
+      <div class="era-tag">ERA 03 <span class="yrs">1980s – Present</span></div>
+      <h2 class="era-title">Contemporary Indian Sociology</h2>
+      <p class="era-desc">Focus turns to modernization, social stratification, and the changing shape of caste and class in a globalizing India.</p>
+    </div>
+    <div class="cards-row">
+
+      <div class="card" style="--card-accent:#FF9933">
+        <div class="card-top">
+          <span class="card-years mono">b. 1934</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>André Béteille</h3>
+        <p class="nationality">Indian</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Studied the interplay of <strong>caste, class, and power</strong> in Indian villages, distinguishing harmonic social structures (where caste, class, and power align) from disharmonic ones (where they diverge).</p>
+        <span class="key-term">Harmonic / Disharmonic Structures</span>
+        <span class="key-term">Caste, Class &amp; Power</span>
+        <span class="key-term">UPSC: Paper II, Caste</span>
+      </div>
+
+      <div class="card" style="--card-accent:#FF9933">
+        <div class="card-top">
+          <span class="card-years mono">1932–2022</span>
+          <span class="card-stamp">Contemporary</span>
+        </div>
+        <h3>Yogendra Singh</h3>
+        <p class="nationality">Indian</p>
+        <span class="contribution-label">Core Contribution</span>
+        <p class="contribution">Theorized the <strong>modernization of Indian tradition</strong> — how Indian society absorbs modernity (rationality, universalism) while reshaping it through existing structures like caste and kinship rather than simply replacing them.</p>
+        <span class="key-term">Modernization of Tradition</span>
+        <span class="key-term">Sanskritization vs. Westernization</span>
+        <span class="key-term">UPSC: Paper II, Social Change</span>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+</div><!-- /world-india -->
+
+<footer>
+  <span>The Sociological Record · A study timeline</span>
+  <span id="footerCount">14 thinkers · 5 eras · ~190 years</span>
+</footer>
+
+<script>
+  // Scroll-reveal for cards
+  const cards = document.querySelectorAll('.card');
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(c => cardObserver.observe(c));
+
+  // Generic era-nav wiring, scoped to a given nav + its era sections
+  function wireEraNav(navEl, sectionsSelector) {
+    if (!navEl) return;
+    const navButtons = navEl.querySelectorAll('button');
+    const eraSections = document.querySelectorAll(sectionsSelector);
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navButtons.forEach(b => b.classList.remove('active'));
+          const activeBtn = navEl.querySelector(`button[data-target="${entry.target.id}"]`);
+          if (activeBtn) activeBtn.classList.add('active');
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+
+    eraSections.forEach(s => navObserver.observe(s));
+  }
+
+  wireEraNav(document.getElementById('eraNav'), '#world-global .era-block');
+  wireEraNav(document.getElementById('eraNavIndia'), '#world-india .era-block');
+
+  // World tab switching
+  const worldTabButtons = document.querySelectorAll('.world-tabs button');
+  const worldSections = document.querySelectorAll('.world-section');
+  const indiaFlagBar = document.getElementById('indiaFlagBar');
+  const headerMeta = document.getElementById('headerMeta');
+  const footerCount = document.getElementById('footerCount');
+
+  const metaByWorld = {
+    'world-global': { span: '1830 – Present', eras: '05', thinkers: '14', footer: '14 thinkers · 5 eras · ~190 years' },
+    'world-india':  { span: '1920s – Present', eras: '03', thinkers: '07', footer: '7 thinkers · 3 eras · ~100 years' }
+  };
+
+  worldTabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.world;
+
+      worldTabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      worldSections.forEach(s => s.classList.remove('active'));
+      document.getElementById(targetId).classList.add('active');
+
+      indiaFlagBar.style.display = (targetId === 'world-india') ? 'block' : 'none';
+
+      const m = metaByWorld[targetId];
+      if (m && headerMeta) {
+        headerMeta.innerHTML =
+          `<div>Span<span>${m.span}</span></div>` +
+          `<div>Eras<span>${m.eras}</span></div>` +
+          `<div>Thinkers<span>${m.thinkers}</span></div>`;
+      }
+      if (m && footerCount) footerCount.textContent = m.footer;
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
